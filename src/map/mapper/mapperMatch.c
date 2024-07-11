@@ -83,9 +83,15 @@ extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_
     Abc_Ntk_t * pNtkNew;
     Mio_Library_t* pLib = (Mio_Library_t *)Abc_FrameReadLibGen();
     pNtkNew = Abc_NtkCreateFromSuperGate2(pM1->pSuperBest, pLib);
+    if(!pNtkNew){
+        printf("pNtkNew is null");
+        goto fail;
+    }
 
     extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize, int fFixed, int fNoModules );
     Io_WriteVerilogLut( pNtkNew, "testM1.v", 0, 0, 0 );
+
+    fail:
 
     if ( !fDoingArea )
     {
