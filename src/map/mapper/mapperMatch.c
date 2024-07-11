@@ -17,6 +17,7 @@
 ***********************************************************************/
 
 #include "mapperInt.h"
+// #include "CoolMapper.c"
 
 #include "misc/util/utilNam.h"
 #include "map/scl/sclCon.h"
@@ -78,6 +79,14 @@ int Map_MatchCompare( Map_Man_t * pMan, Map_Match_t * pM1, Map_Match_t * pM2, in
 {
 //    if ( pM1->pSuperBest == pM2->pSuperBest )
 //        return 0;
+extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_t *pLib);
+    Abc_Ntk_t * pNtkNew;
+    Mio_Library_t* pLib = (Mio_Library_t *)Abc_FrameReadLibGen();
+    pNtkNew = Abc_NtkCreateFromSuperGate2(pM1->pSuperBest, pLib);
+
+    extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize, int fFixed, int fNoModules );
+    Io_WriteVerilogLut( pNtkNew, "testM1.v", 0, 0, 0 );
+
     if ( !fDoingArea )
     {
         // compare the arrival times
