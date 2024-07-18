@@ -79,14 +79,44 @@ int Map_MatchCompare( Map_Man_t * pMan, Map_Match_t * pM1, Map_Match_t * pM2, in
 {
 //    if ( pM1->pSuperBest == pM2->pSuperBest )
 //        return 0;
-extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_t *pLib);
-    Abc_Ntk_t * pNtkNew;
-    Mio_Library_t* pLib = (Mio_Library_t *)Abc_FrameReadLibGen();
-    pNtkNew = Abc_NtkCreateFromSuperGate2(pM1->pSuperBest, pLib);
-    if(!pNtkNew){
-        // printf("pNtkNew is null\n");
+// extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_t *pLib);
+    // Abc_Ntk_t * pNtkNew;
+    // Mio_Library_t* pLib = (Mio_Library_t *)Abc_FrameReadLibGen();
+    // pNtkNew = Abc_NtkCreateFromSuperGate2(pM1->pSuperBest, pLib);
+    // if(!pNtkNew){
+    //     // printf("pNtkNew is null\n");
+    //     goto fail;
+    // }
+    if(!pM1->pSuperBest || !pM2->pSuperBest){
+        // printf("pSuperBest is null\n");
         goto fail;
     }
+    assert(pM1->pSuperBest->pRoot);
+    assert(pM2->pSuperBest->pRoot);
+    // printf("super1: %s\n", Mio_GateReadName(pM1->pSuperBest->pRoot));
+    // printf("tArrive1: %f\n", pM1->tArrive.Worst);
+    // printf("super2: %s\n", Mio_GateReadName(pM1->pSuperBest->pRoot));
+    // printf("tArrive2: %f\n", pM2->tArrive.Worst);
+    char command[100];
+    FILE *fp;
+    sprintf(command, "python3 ../compare_by_name.py %s %s ", Mio_GateReadName(pM1->pSuperBest->pRoot), Mio_GateReadName(pM2->pSuperBest->pRoot));
+    fp = popen(command, "r");
+    if(fp == NULL){
+        printf("popen failed\n");
+        goto fail;
+    }
+    char buf[10];
+    if(fgets(buf, 10, fp) == NULL){
+        printf("fgets failed\n");
+        goto fail;
+    }
+    // printf("%s", buf);
+    // printf("result is: %i", atoi(buf));
+    pclose(fp);
+    return atoi(buf);
+    // printf("%i", system(command));
+    
+    
     // Map_SuperLib_t* superLib = pMan->pSuperLib;
     // if(!superLib) goto fail;
     // for(int i= 0;i<superLib->nSupersReal;++i){
@@ -102,8 +132,9 @@ extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_
 
     // extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize, int fFixed, int fNoModules );
     // Io_WriteVerilogLut( pNtkNew, "testM1.v", 2, 0, 0 );
-    extern void Io_Write( Abc_Ntk_t * pNtk, char * pFileName, Io_FileType_t FileType );
-    Io_Write( pNtkNew, "testM1.v", IO_FILE_VERILOG );
+    // extern void Io_Write( Abc_Ntk_t * pNtk, char * pFileName, Io_FileType_t FileType );
+    // Io_Write( pNtkNew, "testM1.v", IO_FILE_VERILOG );
+
 
     fail:
 
