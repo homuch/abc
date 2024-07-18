@@ -77,13 +77,22 @@ Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_t *pLib
     pRoot = Map_SuperReadRoot(pSuper);
     nFanins = Map_SuperReadFaninNum(pSuper);
     ppFanins = Map_SuperReadFanins(pSuper);
+    for(int i = 0;i<nFanins;++i){
+        if(ppFanins[i]){
+            printf("ppFanins[%d] is not null", i);
+            // printf(Map_SuperReadRoot(ppFanins[i]));
+            if(Map_SuperReadRoot(ppFanins[i]))
+                printf("ppFanins[%d] is %s", i, Mio_GateReadName(Map_SuperReadRoot(ppFanins[i])));
+            // return NULL;
+        } 
+    }
 
     // Create PI nodes for each fanin of the supergate
     for (i = 0; i < nFanins; i++) {
         pNodeFanin = Abc_NtkCreatePi(pNtkNew);
     }
 
-    Abc_Obj_t *  Abc_NodeFromMapSuperChoice_rec( Abc_Ntk_t * pNtkNew, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis );
+    extern Abc_Obj_t *  Abc_NodeFromMapSuperChoice_rec( Abc_Ntk_t * pNtkNew, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis );
     // Recursively build the internal logic of the supergate
     pNodeNew = Abc_NodeFromMapSuperChoice_rec(pNtkNew, pSuper, Abc_NtkGetPisArray(pNtkNew), nFanins);
 

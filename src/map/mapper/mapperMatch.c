@@ -84,12 +84,26 @@ extern Abc_Ntk_t * Abc_NtkCreateFromSuperGate2(Map_Super_t *pSuper, Mio_Library_
     Mio_Library_t* pLib = (Mio_Library_t *)Abc_FrameReadLibGen();
     pNtkNew = Abc_NtkCreateFromSuperGate2(pM1->pSuperBest, pLib);
     if(!pNtkNew){
-        printf("pNtkNew is null");
+        // printf("pNtkNew is null\n");
         goto fail;
     }
+    // Map_SuperLib_t* superLib = pMan->pSuperLib;
+    // if(!superLib) goto fail;
+    // for(int i= 0;i<superLib->nSupersReal;++i){
+    //     //ppSupers[i]->pRoot
+    //     printf("super %d: %s\n", i, Mio_GateReadName(superLib->ppSupers[i]->pRoot));
+    // }
 
-    extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize, int fFixed, int fNoModules );
-    Io_WriteVerilogLut( pNtkNew, "testM1.v", 0, 0, 0 );
+    // printf(Abc_NtkIsNetlist(pNtkNew));
+    // printf(Abc_NtkIsLogic(pNtkNew));
+    // printf(Abc_NtkIsStrash(pNtkNew));
+    // pNtkNew->ntkType = ABC_NTK_NETLIST;
+    // printf('\n');
+
+    // extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize, int fFixed, int fNoModules );
+    // Io_WriteVerilogLut( pNtkNew, "testM1.v", 2, 0, 0 );
+    extern void Io_Write( Abc_Ntk_t * pNtk, char * pFileName, Io_FileType_t FileType );
+    Io_Write( pNtkNew, "testM1.v", IO_FILE_VERILOG );
 
     fail:
 
